@@ -1,0 +1,2 @@
+BEGIN FINAL QA
+Continue as the same agent in the same context. Answer the original question using the persistent `work_df` and the unchanged literal answer program. The intervention ledger is fallible: retain only operations justified by visible evidence. You may use ordinary Python inspection, then submit exactly one final answer with the official `done(answer)` command. Do not export a repaired table.

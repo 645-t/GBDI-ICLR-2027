@@ -1,0 +1,7 @@
+Downstream question:
+[QUESTION]
+
+Visible table (also available as pandas dataframe `df`):
+[TABLE VIEW]
+
+All cells are object dtype. `__row_id__` is runtime metadata, not a source-table field.

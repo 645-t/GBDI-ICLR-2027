@@ -1,0 +1,7 @@
+Downstream question:
+[QUESTION]
+
+Visible table:
+[TABLE VIEW]
+
+All cells are object dtype. `__row_id__` is runtime metadata identifying the canonical source row; it is not a source-table field.

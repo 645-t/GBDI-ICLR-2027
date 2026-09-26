@@ -1,0 +1,12 @@
+
+  Begin!
+  Data table (stored in a pandas dataframe named `df`):
+  [CANONICAL TABLE]
+  All cells in the `df` are `object` data type, regardless of their appearance.
+  Question:
+  [QUESTION]
+
+[RENDERED LEDGER]
+
+BEGIN RESERVED INTERVENTION TURN
+Perform the intervention preturn now. Do not answer the question in this turn.

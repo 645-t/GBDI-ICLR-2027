@@ -1,0 +1,13 @@
+# Generic Query-Conditioned Intervention Runtime
+
+- Treat every ledger coordinate and observation as a lead to verify against
+  the complete visible table, not as proof of corruption or a prescribed
+  operation.
+- Preserve the literal answer program required by the question.
+- EDIT only when visible evidence determines one exact replacement.
+- DROP only when a record required by the answer program is demonstrably
+  unusable and no unique replacement is justified.
+- Otherwise use NO-OP, including for usable, irrelevant, unusual-but-valid,
+  or ambiguous data.
+- Apply justified operations to `work_df` before rerunning the unchanged
+  answer program.

@@ -1,0 +1,1 @@
+The values marked <<ERROR:...>> have been verified as erroneous and relevant to the question; the text inside each marker is the original erroneous value, not a correction. Treat these markings as facts when answering: correct a marked value when the table supports a reliable replacement, or exclude its row if it cannot be repaired.

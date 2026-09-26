@@ -1,0 +1,105 @@
+# Query-Conditioned Intervention Skill v12
+
+## Entry Gate
+
+- Complete the original question-answering task in one code-agent context.
+- Treat the balanced-view ledger as a fallible inspection aid. A coordinate or
+  observation nominates a candidate but never proves corruption or prescribes
+  an operation.
+- Before using an artifact rule, verify one of its direct visible
+  preconditions: an answer-active missing marker, a hard invalid value, or a
+  representation that blocks parsing of an otherwise recoverable value.
+- If none of those preconditions is visible, skip the artifact rules and solve
+  the question with the ordinary code-agent procedure. Do not spend an extra
+  round trying to manufacture an intervention.
+- Preserve the literal answer program: returned entity, population, filters,
+  grouping unit, ordering, tie rule, selected field, units, aggregation, and
+  rounding.
+
+## Operation Boundary
+
+- For each verified answer-relevant problem choose one outcome:
+  - **EDIT** only when independently usable visible evidence determines one
+    exact replacement;
+  - **DROP** only when the record is demonstrably unusable for the question and
+    no unique replacement is justified;
+  - **NO-OP** when the value is usable, irrelevant, unusual but valid, or
+    supported only ambiguously.
+- Candidate recurrence across rotations changes inspection priority, not
+  authorization.
+- Apply supported interventions before filtering, selection, ranking,
+  adjacency, grouping, aggregation, or rounding, then rerun the unchanged
+  answer program from the beginning.
+
+## Missingness
+
+- Activate only for a null, blank, whitespace-only string, or explicit missing
+  marker in a field consumed by the answer program or required to validate it.
+- Inspect returned values, filters, selectors, rank/order fields, ratio
+  operands, and only their necessary companions. Do not bulk-fill unrelated
+  columns.
+- Test these visible recovery routes:
+  - an exact same-row total/parts, difference, product, ratio, average, or
+    start/end/duration identity;
+  - an equivalent machine/display field or redundant representation;
+  - a complete-key mapping with exactly one value throughout comparable rows.
+- Verify a proposed relation on every row where target and sources coexist.
+  Reject it when a required source is missing, malformed, or contradictory.
+- Use an alternate representation only to replace a missing answer-active
+  value. Preserve every observed usable value in the primary question-specified
+  field; never recompute the entire column from its alternate representation.
+- EDIT only the missing field with its uniquely implied value.
+- DROP only when the unrecoverable field is required to decide participation or
+  contribution. Use NO-OP when it cannot affect the answer.
+
+## Bad Values
+
+- Activate only for a spreadsheet error, impossible token, explicit sentinel,
+  or value that fails an answer-active field's necessary type or exact visible
+  relation.
+- Numeric sentinels remain numeric after `pd.to_numeric`; detect and mask an
+  established sentinel explicitly before testing missingness or recovery.
+- Establish a sentinel from its visible role and repeated conflict with a
+  necessary relation, not merely from being negative, large, rare, or
+  zero-padded.
+- Preserve identifiers, codes, names, labels, titles, URLs, descriptions,
+  categories, types, schools, and locations even when they contain digits or
+  unusual text.
+- Before DROP, test all applicable exact recovery routes:
+  - a redundant machine/display or category/code representation;
+  - a same-row total/parts, product/factors, rate/base, annual/hourly, or
+    start/end/duration identity;
+  - a date-derived field or selector fixed by the question's grouping and
+    ordering;
+  - a complete-key mapping with one value throughout comparable rows.
+- Validate each relation on unaffected rows and verify every source. If one
+  route yields exactly one value, EDIT before any query operation.
+- DROP only when an answer-active record remains unusable and no independent
+  anchor survives. Use NO-OP when evidence or repair direction is ambiguous.
+
+## Inconsistent Formatting
+
+- Activate only when representation blocks parsing or comparison of an
+  answer-relevant value while its semantic value remains recoverable.
+- Inspect the complete set of distinct answer-active token patterns before
+  writing the parser; do not infer a delimiter or wrapper from one example.
+- Match parsing to field role: numeric wrappers for measures, ordinal parsing
+  for ranks, dates for time fields, and categories only when visible redundant
+  fields establish the mapping.
+- Parse the complete token with a role-specific pattern. Do not use the first
+  numeric substring when another digit, sign, decimal mark, exponent, percent,
+  or unit remains unexplained.
+- Preserve every digit, sign, decimal position, exponent, percentage
+  interpretation, and declared unit scale.
+- Remove currency marks, grouping separators, units, percent notation, or text
+  wrappers only when the complete token has one interpretation.
+- Parse ordinal or wrapped rank values before filtering the requested ranks.
+  Do not silently coerce malformed rank tokens to `NaN` and drop them.
+- Collapse one duplicated decimal mark only when that deletion yields a unique
+  valid number matching the column's observed grammar. Never invent a decimal
+  position.
+- Edit only visibly formatted cells. Do not rewrite an already usable column
+  merely to change its Python dtype.
+- Standardize a category only when visible variants clearly denote the same
+  entity and a canonical form is already present. Formatting alone never
+  justifies DROP.

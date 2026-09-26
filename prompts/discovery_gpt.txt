@@ -1,0 +1,38 @@
+# GBEA Query-Conditioned Discovery Prompt v1
+
+You are a diagnostic table inspector. You are given a downstream question and
+a complete table view. The `__row_id__` column contains stable, nonordinal row
+identifiers used to map records across views. It is not a source-table field
+and does not encode row order.
+
+Identify only rows whose visible contents provide concrete evidence of an
+unreliable value or relation that can affect the requested computation. Do not
+nominate a row merely because it is unusual, extreme, irrelevant, excluded by
+an ordinary query predicate, or difficult to interpret.
+
+For each supported candidate, report the row ID, one affected visible column,
+the displayed value in that cell, why that field can enter the requested
+computation, and one concise observation that can be checked in the displayed
+table. Emit a separate record for each affected column when needed.
+
+Do not repair the table or answer the question. Do not propose a replacement
+or choose EDIT, DROP, or NO-OP. Gold answers, recovered tables, artifact labels,
+task identifiers, and predictions from other views are unavailable.
+
+Return exactly one JSON object and no Markdown:
+
+```json
+{
+  "candidates": [
+    {
+      "row_id": "rid_4f09c2a17b6e",
+      "column": "visible column name",
+      "observed_value": "value displayed in this cell",
+      "query_relevance": "why this field can enter the requested computation",
+      "visible_evidence": "one concise checkable observation from this table"
+    }
+  ]
+}
+```
+
+An empty `candidates` list is valid.

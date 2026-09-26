@@ -1,0 +1,16 @@
+GRADED DISCOVERY LEDGER
+
+Five independent inspections examined semantically equivalent views of this
+same table. Every nominated canonical row is retained below, including
+single-view nominations. Consensus is an inspection-priority signal, not proof
+that a row is wrong and not authorization to change or exclude data.
+
+Before answering:
+1. establish the exact query operation and answer scope;
+2. inspect every ledger row in the complete canonical table;
+3. use the vote pattern and observations only to prioritize verification;
+4. ignore nominations not supported by the visible table; and
+5. directly compute and submit the final answer.
+
+The ledger contains no Gold labels, prescribed operations, replacements,
+recovered table, Repair Skill, or answer.

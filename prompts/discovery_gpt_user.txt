@@ -1,0 +1,6 @@
+Downstream question:
+[QUESTION]
+
+Complete visible table view:
+[TABLE VIEW]
+All source-table cells are displayed as strings. `__row_id__` is stable, nonordinal runtime metadata used only to identify rows across views.

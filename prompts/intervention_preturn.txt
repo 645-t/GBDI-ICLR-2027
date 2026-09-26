@@ -1,0 +1,22 @@
+## Continuous Intervention Preturn
+
+The first assistant turn is reserved for query-conditioned intervention. Do
+not answer the downstream question and do not return `done` in this turn.
+Return exactly one ordinary YAML `python` command.
+
+The Python namespace already contains the canonical object-typed `df` and a
+separate `work_df = df.copy()`. In one executable block:
+
+1. identify the literal answer program required by the question;
+2. re-check only query-relevant ledger candidates and any directly necessary
+   companion cells against the complete visible table;
+3. decide `EDIT`, `DROP`, or `NO-OP` under the v12 operation boundaries;
+4. apply every justified EDIT or DROP to `work_df`, leaving `df` unchanged;
+5. set `intervention_log` to a list of concise dictionaries containing the
+   candidate coordinate, visible evidence, chosen action, and reason;
+6. print a compact audit summary, but do not compute or print the final answer.
+
+An empty modification set is valid only after the applicable candidates have
+been checked; in that case retain `work_df` unchanged and record the relevant
+NO-OP decisions. The next user turn will contain the Python observation and
+open final QA. The same message history and Python namespace will persist.
