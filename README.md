@@ -51,12 +51,6 @@ unrelated files. Fresh API outputs may differ from the saved results.
 | `docs/` | Experimental settings and scoring details |
 | `licenses/` | Required upstream license and attribution records |
 
-Each archived QA record stores one answer used in the paper's evaluation.
-Some historical Code records used an observation fallback without a formal
-`done` submission. Replay reports both recorded and strict scores; new runs
-require formal submissions. See [scoring details](docs/scoring-audit.md) for
-the discrepancy that remains to be reconciled before final release.
-
 ## Sources
 
 The QA prompts, answer matcher and command interface derive from
