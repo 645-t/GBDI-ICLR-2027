@@ -48,7 +48,6 @@ unrelated files. Fresh API outputs may differ from the saved results.
 | `data/` | Tables, reviewed reference, interventions, cohorts and row orders |
 | `prompts/` | Final prompts and rule-deletion variants |
 | `results/` | Final predictions and numerical verification targets |
-| `docs/` | Experimental settings and scoring details |
 | `licenses/` | Required upstream license and attribution records |
 
 ## Sources
