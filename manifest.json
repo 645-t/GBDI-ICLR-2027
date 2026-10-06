@@ -1,5 +1,5 @@
 {
-  "format_version": 2,
+  "format_version": 3,
   "sha256": {
     ".gitignore": "f3f9ae40c7428a4846d787512786e5e6199c499dac97c8095b319a8bcd7ccc22",
     "configs/experiments.json": "64b2d18484586d3a7a1126f719c65e3156c3770b779eb09ed6f4c4f2e9bbfe07",
@@ -15,15 +15,15 @@
     "data/random_views.json.gz": "56df3f36a213191aa402aa0d1543244a941b75b9a014e70c47c4c89450d9c55d",
     "data/reviewed_interventions.json": "5a82d81577346cba7503db3be9d639bf4598a13b47c8cdd17fe82e13d9238f1f",
     "data/task_sources.json": "b7c8dfeb75c64649c25715071bb98e54ea2282a028654d6da3c6578467bc43fa",
-    "docs/experiments.md": "26cc748dd22856e2e73b0009f230c231146326dd3ce74413ffbe764154918bbc",
-    "docs/scoring-audit.md": "0050ba9debc702d635bf8e5a752850a0947fded4ba796e0bb2be9b919d125e35",
+    "docs/experiments.md": "c0794d35fc7be05ae7d0b750e476b46f0c13f6debc319f6698112dd48181abef",
+    "docs/scoring-audit.md": "319b6d7d250c0f195e7619df0a559ec41a0261064c391c8097a9d885c6ea6cc2",
     "gbdi/__init__.py": "22ef328111a5885ee9f619599332722542a6f4288d9808a9bc233b13d4c0f46c",
-    "gbdi/__main__.py": "4c206ef1d42a3b3c36c27d1ef1dffdac4dc02567645429d7692e0640ab9602a1",
+    "gbdi/__main__.py": "3737a79d0c281657e962ba82a960a92108330edc61abb8714990a076b9db7686",
     "gbdi/budget.py": "2d08511537611df896aaa1efd64a359d9a71155ee90d8559d67f4422461a5a38",
     "gbdi/client.py": "8443db6ef90b5c5178258aec2445e39b2acb007664db75b73c83beb08b81ff3a",
     "gbdi/data.py": "58d47a2684deb9157a7f18ce9969e63696409e2d08f1e20641a227b368682070",
     "gbdi/discovery.py": "89dd5a1ea5e1720634781e35dd679886925a5202f7ec0bb91f3e804f90867eef",
-    "gbdi/evaluation.py": "178b49f4406b6d42a65fbcbc60f046d363f0cba197b1ef8135ec6bae90793819",
+    "gbdi/evaluation.py": "f6e98fb845ea0b8732aa88679db8aafd0b053d86f4ecb4f6b828d2d31cd815d8",
     "gbdi/external.py": "e62c577df9d2441a7833920522d856c4da53602d9363191ea097684aed9a7b18",
     "gbdi/geometry.py": "c7520182234b60180c57e3a042e9776e2d9228fea41fe49c6a65426280be6be3",
     "gbdi/geometry_code.py": "ccbd3b61b72934ad343d37ddf43efdefe906cbb6cd37911d9854f1fb77a5adbe",
@@ -39,7 +39,7 @@
     "gbdi/runtime.py": "bc371487d497dd0ed3876cc64346c3e85c8ab1f5cf0a284cb0b568f472224299",
     "gbdi/scoring.py": "d019adb52d60c766c03b151b4d6d138cb2609afd0cef0a10d642069dd1eca3d5",
     "gbdi/table_states.py": "7538274a9c61f7fe456650ed2e187ea0d9a5ece70266c4912edf97eceb1d944b",
-    "gbdi/verify.py": "ab0b04f074ebac977dc6b4dafc802251f8819ac1f3dd7d58edbc739c79bf173a",
+    "gbdi/verify.py": "fd6683f05f9f76bde1ad11c45477e11077015b862e920d12d910a24f3584098e",
     "gbdi/workflows.py": "f36fd361c5053272443cf8e13202e8f10c6f9b0601bd1732540ce8cad7e3012f",
     "licenses/RADAR-Apache-2.0.txt": "12c26eac74fcbb9a32c8bd3f9139e5c26d9eb3c815d299ca1e0fc178e266ffcb",
     "licenses/RADAR-data-CC-BY-4.0.md": "d7b2626d479f164c34e30aaca9ac56703aca8f07e6cdf45e199063eed725dcd2",
@@ -69,12 +69,12 @@
     "prompts/skill_no_execution_checks.txt": "b123975ce267bed8056fa6dbf70afc1ed7c62cb528d01521825e53f734f8f94e",
     "prompts/skill_no_format_rules.txt": "6b47485086f4cb06ab794cf933593bc949f8d3d8043094991e8bf973c628208e",
     "prompts/skill_no_recovery_rules.txt": "e70ebfaf620e967cae08f4fcd308eb0eb9350f0d5d35012af82f1b7a9af529f3",
-    "README.md": "cec1efde1936b69ec42b70cda088c071fd932f46c257eee1b917c251f1d89ed5",
+    "README.md": "a43106a83298603c1a6f03dcf1fbc7c58373612796f49aee49145509b641b820",
     "requirements.txt": "6bd22a2b78f28fa55666c0251e882302d18f3e4ee6106b1489610f0f7be54861",
     "results/discovery.json.gz": "0ebbbc284df3a65c2d450c6831b8765cd0e0d23c38c48c0189a5e26156216e8c",
-    "results/expected_metrics.json": "636ac03451ee9a784664415880cb5abb8ed8c4202144fbd308fdba05515e9fc5",
+    "results/expected_metrics.json": "5ac6c5a2f6cc942d09bf1e4b93c13442cde260aca152b15c189b594c822946ef",
     "results/geometry.json.gz": "fcc8be7f0da3a3bb2cecefa3a22bed7dc6877c9aec6dab328ed0b45fda6e0a2d",
-    "results/qa.json.gz": "f8f28c66489b108bf96874bd4c976f2f304cafa3932d07249e7f0d6669d1fca4"
+    "results/qa.json.gz": "380af4fc3398699aff29da14233f5b2a167165babfdd7484b2f3edb2853deeaf"
   },
-  "protocol_digest": "540f16b5f3b8a3749077a634f9b8a09ef1b66f0ff4ffcfecc6eef07059a3afa5"
+  "protocol_digest": "889b396363f8c2b4712c69cd336704ccd24dba000b36e715e13e5d99491b90be"
 }

@@ -1,12 +1,17 @@
-# Scoring audit: recorded outputs versus strict final submissions
+# Scoring audit: correction to formal final submissions
 
-The manuscript describes Code Agent/GBDI scoring as requiring an explicit
-`done` submission. The final experimental archives reveal a narrower mismatch:
-the DeepSeek Code baseline and some table-state Code records include correct
-answers extracted from Python observations after the response allowance was
-exhausted. They have no valid final `done` submission.
+This release applies one strict scoring rule to the 12,162 archived QA records
+across 48 experimental cells. Code Agent and GBDI require a `done` command
+accepted by the original parser within five final QA responses. Direct
+requires the literal `The answer is:` prefix. Missing or invalid submissions
+have blank answers and score as incorrect; Python observations are not
+final answers.
 
-| Experimental cell | n | Correct in recorded statistics | Correct with strict `done` |
+The original QA statistics counted some answers taken from Python observations
+after the response allowance was exhausted. Enforcing formal submissions
+changes 59 correctness decisions in seven cells:
+
+| Experimental cell | n | Originally counted correct | Strict correct |
 |---|---:|---:|---:|
 | DeepSeek Code baseline | 313 | 187 | 162 |
 | Qwen, Discovery table, Code | 154 | 87 | 86 |
@@ -16,25 +21,31 @@ exhausted. They have no valid final `done` submission.
 | GPT, Raw table, Code | 154 | 73 | 72 |
 | GPT, Discovery table, Code | 154 | 90 | 89 |
 
-All 59 changed correctness decisions have a recorded max-step fallback marker.
-The other QA cells have the same recorded and strict correct counts.
+All 59 changed decisions concern records whose original statistics used an
+observation fallback. The other QA cells retain their original correct counts.
+Of the changed DeepSeek records, 24 include a later `done` block after a Python
+command in the same response. It was not the command accepted by the original
+parser. The original prompts explicitly require exactly one command block
+per response, so these later blocks do not supply valid final submissions.
 
-`results/qa.json.gz` stores exactly one answer per final experimental record:
-the answer used for the paper's recorded statistics. Its `correct` field uses
-that same recorded scoring rule. `valid_submission` indicates a formal answer;
-where an observation fallback was used, `answer_source` explicitly records
-`python_observation_after_limit`. These fields allow `replay` to derive both
-scoring profiles from the same answer, without a second answer archive or
-silently declaring an observation an explicit submission. It also outputs the
-IDs of every scoring disagreement. New runs use strict submissions; there is
-no observation-answer fallback in the live runner.
+The correction changes nine paired QA contrasts and 23 per-artifact QA
+subcells. Code Agent Action-minus-Discovery gains are 39.6–65.6 percentage
+points. DeepSeek GBDI-minus-Code is +16.0 percentage points (95% CI
+[9.9, 22.3]). Across systems, overall GBDI-minus-Code gains remain
+3.8–18.5 percentage points.
 
-These are scoring-rule differences, not newly collected model results. This
-package does not edit the manuscript or assert that all its reported numbers
-already implement the written strict rule. The recorded statistics and strict
-statistics should be reconciled before a final public release.
+`results/qa.json.gz` contains only formally submitted answers and strict
+correctness labels. Invalid records have a blank `answer` and `correct: false`.
+The original source archives are retained separately from this upload package.
+`replay` writes strict `correct` and `accuracy_pct` values to `qa.csv` and a
+flat `qa_contrasts` mapping in `intervals.json`. The release exposes one
+scoring profile.
 
-One small printed-interval difference is also reproducible: the archived GPT
-GBDI-minus-Code source-table bootstrap gives approximately
-`[-2.4491, 9.8182]` pp; the current manuscript displays `[-2.50, 9.80]`.
-The replay reports the values calculated from the saved predictions and seed.
+This correction uses saved outputs without new API calls or experiment
+reruns. Prompts, request parameters, cohorts and evaluation references are
+unchanged.
+
+The archived GPT GBDI-minus-Code source-table bootstrap interval is
+approximately [-2.4491, 9.8182] percentage points; the originally printed
+interval was [-2.50, 9.80]. Replay reports the values calculated from the
+saved predictions and seed.

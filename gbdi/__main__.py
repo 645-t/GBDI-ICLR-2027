@@ -9,7 +9,7 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('list', help='List all reported experimental cells')
     commands.add_parser('verify', help='Offline input, integrity and protocol checks')
-    replay = commands.add_parser('replay', help='Recompute paper metrics from archived minimal outputs')
+    replay = commands.add_parser('replay', help='Recompute archived metrics with strict final-submission QA scoring')
     replay.add_argument('--output', type=Path, default=Path('runs/replay'))
     score = commands.add_parser('score', help='Score a newly collected run offline')
     score.add_argument('run_directory', type=Path)

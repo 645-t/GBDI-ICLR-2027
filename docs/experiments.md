@@ -80,9 +80,14 @@ environment. Transport retries do not enlarge the semantic response allowance.
 ## Evaluation
 
 Direct requires the literal `The answer is:` prefix, with up to three format
-attempts. Code and GBDI strict scoring uses the first valid `done` command
-within five final responses. Predictions are evaluated with the RADAR answer
-matcher. The scoring audit explains where historical recorded scores differ.
+attempts. Code Agent and GBDI credit the first `done` command accepted by the
+original parser within five final QA responses. The original prompts require
+exactly one command block per response; a later `done` block after a Python
+command in the same response is not accepted as a final submission.
+Missing or invalid submissions have blank answers and score as incorrect;
+Python observations are not final answers. Valid submissions are evaluated
+with the RADAR answer matcher. The [scoring audit](scoring-audit.md) documents
+the correction to the original QA statistics.
 
 Discovery CDR measures whether every reference critical row was found. Macro
 precision, recall and F1 are computed per view/instance before averaging;

@@ -22,14 +22,40 @@ def row_metrics(predicted, target):
 
 
 def archived_scores(record, gold):
-    """Derive both scoring profiles from the one answer used in the paper."""
-    matched=bool(official_match_answer(record['answer'],gold))
-    strict=bool(record['valid_submission'] and matched)
-    fallback=record.get('answer_source')=='python_observation_after_limit'
-    recorded=bool((record['valid_submission'] or fallback) and matched)
-    if bool(record['correct'])!=recorded:
-        raise ValueError('Archived correctness does not match the saved answer and its provenance')
-    return strict,recorded,fallback
+    """Validate an archived final answer and return strict submission correctness."""
+    if set(record)!={'recipe','example_id','answer','valid_submission','correct'}:
+        raise ValueError('Archived QA records must contain only the five final-submission fields')
+    if not isinstance(record['answer'],str):
+        raise ValueError('Archived QA answers must be strings')
+    if type(record['valid_submission']) is not bool or type(record['correct']) is not bool:
+        raise ValueError('Archived submission validity and correctness must be Boolean')
+    if not record['valid_submission'] and record['answer']!='':
+        raise ValueError('An invalid final submission must have a blank archived answer')
+    correct=bool(record['valid_submission'] and official_match_answer(record['answer'],gold))
+    if record['correct']!=correct:
+        raise ValueError('Archived correctness does not match strict final-submission scoring')
+    return correct
+
+
+def archived_qa_groups(records, inputs, recipes, cohorts):
+    """Validate unique archived QA jobs and their complete frozen cohorts."""
+    groups=defaultdict(dict)
+    qa_recipes={name:spec for name,spec in recipes.items() if spec['family'] not in {'geometry','external'}}
+    for record in records:
+        recipe,eid=record['recipe'],record['example_id']
+        if recipe not in qa_recipes or eid not in inputs:
+            raise ValueError('Archived QA record has an unknown recipe or benchmark instance')
+        archived_scores(record,inputs[eid]['answer'])
+        if eid in groups[recipe]:
+            raise ValueError(f'Duplicate archived QA job: {recipe}, {eid}')
+        groups[recipe][eid]=record
+    if set(groups)!=set(qa_recipes):
+        raise ValueError('Archived QA recipes differ from the frozen experiment inventory')
+    for recipe,spec in qa_recipes.items():
+        cohort=cohorts['reviewed' if spec['family']=='table-state' else 'benchmark']
+        if len(cohort)!=len(set(cohort)) or len(cohort)!=spec['expected_jobs'] or set(groups[recipe])!=set(cohort):
+            raise ValueError(f'Archived QA cohort differs from the frozen design: {recipe}')
+    return groups
 
 
 def cluster_interval(values, clusters, draws=10000, seed=20260905427):
@@ -76,11 +102,13 @@ def validate_replay(output):
         for key,value in check['values'].items():
             assert np.isclose(row[key],value,rtol=1e-11,atol=1e-9),(check['selector'],key,float(row[key]),value)
             checked+=1
-    intervals=data.read_json(output/'intervals.json')['geometry_contrasts']
-    for recipe,wanted in expected['geometry_intervals'].items():
-        for key,value in wanted.items():
-            assert np.allclose(intervals[recipe][key],value,rtol=1e-11,atol=1e-9),(recipe,key)
-            checked+=1
+    intervals=data.read_json(output/'intervals.json')
+    assert set(intervals['qa_contrasts'])==set(expected['qa_intervals']),'QA contrast inventory differs from expected metrics'
+    for kind,reference in [('geometry_contrasts','geometry_intervals'),('qa_contrasts','qa_intervals')]:
+        for recipe,wanted in expected[reference].items():
+            for key,value in wanted.items():
+                assert np.allclose(intervals[kind][recipe][key],value,rtol=1e-11,atol=1e-9),(kind,recipe,key)
+                checked+=1
     return checked
 
 
@@ -121,31 +149,17 @@ def replay(output):
     sources=data.read_json(data.ROOT/'data/task_sources.json')
     recipes={r['id']:r for r in data.read_json(data.ROOT/'configs/experiments.json')}
     qa=data.read_json(data.ROOT/'results/qa.json.gz')
-    groups=defaultdict(dict)
-    for r in qa:
-        strict,recorded,fallback=archived_scores(r,inputs[r['example_id']]['answer'])
-        r.update(correct=strict,recorded_correct=recorded,fallback_in_record=fallback)
-        groups[r['recipe']][r['example_id']]=r
-    qa_summary=[];discrepancies=[]
+    groups=archived_qa_groups(qa,inputs,recipes,data.read_json(data.ROOT/'data/cohorts.json'))
+    qa_summary=[]
     for recipe,items in sorted(groups.items()):
-        assert len(items)==recipes[recipe]['expected_jobs']
-        strict=sum(r['correct'] for r in items.values())
-        recorded=sum(r.get('recorded_correct',r['correct']) for r in items.values())
-        qa_summary.append({'recipe':recipe,'n':len(items),'correct_strict':strict,
-                           'accuracy_strict_pct':100*strict/len(items),'correct_recorded':recorded,
-                           'accuracy_recorded_pct':100*recorded/len(items)})
-        for eid,r in items.items():
-            if r.get('recorded_correct',r['correct'])!=r['correct']:
-                discrepancies.append({'recipe':recipe,'example_id':eid,'strict_correct':r['correct'],
-                                      'recorded_correct':r['recorded_correct'],'fallback_in_record':r.get('fallback_in_record',False)})
+        correct=sum(r['correct'] for r in items.values())
+        qa_summary.append({'recipe':recipe,'n':len(items),'correct':correct,
+                           'accuracy_pct':100*correct/len(items)})
     contrasts={}
     def paired(name,left,right):
         a,b=groups[left],groups[right];assert set(a)==set(b)
         ids=sorted(a);cluster=[sources[inputs[e]['task_id']] for e in ids]
-        contrasts[name]={}
-        for profile in ['strict','recorded']:
-            value=lambda r:r.get('recorded_correct',r['correct']) if profile=='recorded' else r['correct']
-            contrasts[name][profile]=cluster_interval([int(value(a[e]))-int(value(b[e])) for e in ids],cluster)
+        contrasts[name]=cluster_interval([int(a[e]['correct'])-int(b[e]['correct']) for e in ids],cluster)
     for system in ['qwenplus','glm45air','minimaxm25','gpt5mini','deepseek']:
         main=f'gbdi-{system}-random5-skill'
         for baseline in ['direct','code']:
@@ -169,7 +183,6 @@ def replay(output):
     artifacts=defaultdict(list)
     for r in qa:artifacts[r['recipe'],inputs[r['example_id']]['artifact_type']].append(r)
     write_csv(output/'qa_by_artifact.csv',[{'recipe':k[0],'artifact_type':k[1],'n':len(rs),'correct':sum(r['correct'] for r in rs),'accuracy_pct':100*np.mean([r['correct'] for r in rs])} for k,rs in sorted(artifacts.items())])
-    write_csv(output/'scoring_discrepancies.csv',discrepancies)
 
     frozen={}
     for external in [False,True]:
@@ -274,6 +287,6 @@ def replay(output):
     (output/'intervals.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
     numeric_checks=validate_replay(output)
     summary={'api_calls':0,'qa_records':len(qa),'geometry_records':len(geometry_rows),
-             'numeric_checks_passed':numeric_checks,'scoring_disagreements':len(discrepancies),'output_files':sorted(p.name for p in output.iterdir() if p.is_file())}
+             'numeric_checks_passed':numeric_checks,'output_files':sorted(p.name for p in output.iterdir() if p.is_file())}
     (output/'summary.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
     return summary
