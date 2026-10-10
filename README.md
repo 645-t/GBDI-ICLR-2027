@@ -1,8 +1,5 @@
 # Understanding Errors in LLM-Based Question Answering over Imperfect Tables
 
-Anonymous reproduction code, fixed inputs, final prompts and compact results
-for the paper's experiments. See [experiment settings](docs/experiments.md).
-
 ## Offline reproduction
 
 Use Python 3.12 and run from this directory:
